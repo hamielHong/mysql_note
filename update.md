@@ -16,9 +16,17 @@ mysql 批量更新共有以下四种办法：
 
     > replace into test_tbl (id,dr) values (1,'2'),(2,'3'),...(x,'y');
 
+    优点：重复的会更新，不存在的会插入
+
+    注意：replace into 在更新时，会把之前的重复记录删除，再插入新记录；也就是说，会导致：1、使用了主键自增id的，会发生变化；2、更新的记录中不包含的字段，会变为默认值；即 delete -> insert
+
 2. insert into ...on duplicate key update批量更新
 
     > insert into test_tbl (id,dr) values (1,'2'),(2,'3'),...(x,'y') on duplicate key update dr=values(dr);
+
+    优点：重复的会更新，不存在的会插入
+
+    注意：insert into on duplicate key update 在更新时，对重复记录使用update，不会导致主键自增id变化，和不包含的字段变化；即 update -> insert
 
 3. 创建临时表，先更新临时表，然后从临时表中update
 
